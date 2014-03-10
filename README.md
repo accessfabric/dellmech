@@ -22,11 +22,11 @@ Please take the following steps to enable Dell Mechanims Driver:
 
    sudo apt-get -y install git
    
-cd to folder of ml2/drivers
+   cd to folder of ml2/drivers
 
    git init
    
-git pull https://github.com/accessfabric/dellmech.git
+   git pull https://github.com/accessfabric/dellmech.git
    
 
 3. in /etc/neutron/plugins/ml2, add ml2_dell_conf.ini
