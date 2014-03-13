@@ -22,7 +22,7 @@ Please take the following steps to enable Dell Mechanims Driver:
 
    check out the folder and files in /dell from github
 
-3. create file ml2_conf_dell.ini under /etc/neutron/plugins/ml2/, refer to the sample file in github.
+3. create file ml2_conf_dell.ini under /etc/neutron/plugins/ml2/, refer to the sample file in github. Edit it with            corresponding values.
 
 4. in /etc/neutron/plugins/ml2/ml2_conf.ini, find the line mechanism_drivers, add dell to it. Here is an example of how it     may look like : mechanism_drivers = openvswitch,dell
 
