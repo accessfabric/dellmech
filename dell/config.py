@@ -15,6 +15,18 @@ DELL_DRIVER_OPTS = [cfg.StrOpt('controller_ip',
                     cfg.StrOpt('password',
                 default='',
                 help=_("openflow controller rest api password")),
+                    cfg.StrOpt('adminuser',
+                default='admin',
+                help=_("openstack admin user")),
+                    cfg.StrOpt('adminpwd',
+                default='',
+                help=_("openstack admin password")),
+                    cfg.StrOpt('authurl',
+                default='',
+                help=_("openstack auth url")),
+                    cfg.StrOpt('projectname',
+                default='',
+                help=_("openstack project name")),
 ]
 
 
