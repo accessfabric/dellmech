@@ -45,8 +45,8 @@ class RemoteRestError(exceptions.NeutronException):
     def __init__(self, message):
         if message is None:
             message = "None"
-        self.message = _("Error in REST call to vulcan network "
-                         "controller") + ": " + message
+        self.message = _("Error in REST call to Access Fabric "
+                         "Controller") + ": " + message
         super(RemoteRestError, self).__init__()
 
 
@@ -193,7 +193,10 @@ class DellMechanismDriver(api.MechanismDriver):
         creds = self.get_nova_creds()
         self.nova = nvclient.Client(**creds)
         self.old_time = -1
-        self.keystone = client.Client(username="admin", password="openflow", tenant_name="demo", auth_url="http://127.0.0.1:5000/v2.0")
+        self.keystone = client.Client(username=cfg.CONF.ml2_dell.adminuser, 
+                                      password=cfg.CONF.ml2_dell.adminpwd, 
+                                      tenant_name=cfg.CONF.ml2_dell.projectname, 
+                                      auth_url=cfg.CONF.ml2_dell.authurl)
         threading.Timer(20,self.reconcile_all).start()
     
     def post_tenant(self,tenant_id):
@@ -210,7 +213,7 @@ class DellMechanismDriver(api.MechanismDriver):
                         raise RemoteRestError(ret[2])
                     self.tenants.add(tenant_id)
             except RemoteRestError as e:
-                LOG.error(_("Dell Vulcan Tenant Creation error:Unable to create remote "
+                LOG.error(_("Dell Access Fabric Controller Tenant Creation error:Unable to create remote "
                             "tenant: %s"), e.message)
 #  super(neutronRestProxyV2, self).delete_network(context,
 #         new_net['id'])
@@ -231,7 +234,7 @@ class DellMechanismDriver(api.MechanismDriver):
                         raise RemoteRestError(ret[2])
                     self.provider_not_created = False
             except RemoteRestError as e:
-                    LOG.error(_("Dell Vulcan Provider Creation error:Unable to create remote "
+                    LOG.error(_("Dell Access Fabric Controller Provider Creation error:Unable to create remote "
                                 "provider: %s"), e.message)
     #  super(neutronRestProxyV2, self).delete_network(context,
     #         new_net['id'])
@@ -256,7 +259,7 @@ class DellMechanismDriver(api.MechanismDriver):
                     raise RemoteRestError(ret[2])
                 self.networks.add(network['id']+network['tenant_id'])
         except RemoteRestError as e:
-                LOG.error(_("Dell Vulcan Network Creation error:Unable to create remote "
+                LOG.error(_("Dell Access Fabric Controller Network Creation error:Unable to create remote "
                             "network: %s"), e.message)
 #  super(neutronRestProxyV2, self).delete_network(context,
 #         new_net['id'])
@@ -327,7 +330,7 @@ class DellMechanismDriver(api.MechanismDriver):
                 if not self.server.action_success(ret):
                     raise RemoteRestError(ret[2])   
         except RemoteRestError as e:
-                LOG.error(_("Dell Vulcan Endpoint Creation error:Unable to create remote "
+                LOG.error(_("Dell Access Fabric Controller Endpoint Creation error:Unable to create remote "
                             "endpoint: %s"), e.message)
                 
                     
@@ -339,7 +342,7 @@ class DellMechanismDriver(api.MechanismDriver):
                 if not self.server.action_success(ret):
                     raise RemoteRestError(ret[2])
         except RemoteRestError as e:
-                LOG.error(_("Dell Vulcan Network Deletion error:Unable to delete remote "
+                LOG.error(_("Dell Access Fabric Controller Network Deletion error:Unable to delete remote "
                             "network: %s"), e.message)
           
     def create_port_postcommit(self,context):
@@ -408,7 +411,7 @@ class DellMechanismDriver(api.MechanismDriver):
                 raise RemoteRestError(ret[2])
             self.host_vm(port); 
         except RemoteRestError as e:
-            LOG.error(_("Dell Vulcan Endpoint Creation error:Unable to create remote endpoint: %s"), e.message)
+            LOG.error(_("Dell Access Fabric Controller Endpoint Creation error:Unable to create remote endpoint: %s"), e.message)
 #  super(neutronRestProxyV2, self).delete_network(context,
 #         new_net['id'])
             raise
@@ -435,7 +438,7 @@ class DellMechanismDriver(api.MechanismDriver):
                     raise RemoteRestError(ret[2])
                     
         except RemoteRestError as e:
-                LOG.error(_("Dell Vulcan Endpoint Deletion error:Unable to delete remote "
+                LOG.error(_("Dell Access Fabric Controller Endpoint Deletion error:Unable to delete remote "
                             "endpoint: %s"), e.message)
                 raise
     
@@ -508,7 +511,7 @@ class DellMechanismDriver(api.MechanismDriver):
             if not self.server.action_success(ret):
                 LOG.error(_("post error"),ret[2])
         except RemoteRestError as e:
-                LOG.error(_("Dell Vulcan API error:"), e.message)
+                LOG.error(_("Dell Access Fabric Controller API error:"), e.message)
                 
     def put_no_exp(self,resource,data):
         try:
@@ -516,13 +519,13 @@ class DellMechanismDriver(api.MechanismDriver):
             if not self.server.action_success(ret):
                 LOG.error(_("post error"),ret[2])
         except RemoteRestError as e:
-                LOG.error(_("Dell Vulcan API error:"), e.message)
+                LOG.error(_("Dell Access Fabric Controller API error:"), e.message)
                  
     def get_nova_creds(self):
         d = {}
-        d['username'] = "admin"
-        d['api_key'] = "openflow"
-        d['auth_url'] = "http://127.0.0.1:5000/v2.0"
-        d['project_id'] = "demo"
+        d['username'] = cfg.CONF.ml2_dell.adminuser
+        d['api_key'] = cfg.CONF.ml2_dell.adminpwd
+        d['auth_url'] = cfg.CONF.ml2_dell.authurl
+        d['project_id'] = cfg.CONF.ml2_dell.projectname 
         return d   
     
