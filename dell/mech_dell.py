@@ -266,7 +266,10 @@ class DellMechanismDriver(api.MechanismDriver):
                 raise
             
     def create_subnet_postcommit(self,context):
-        subnet = context.current
+        try:
+            subnet = context.current
+        except:
+            subnet = {'cidr':'0.0.0.0/24'}
         network_id = subnet['network_id']+subnet['tenant_id']
         
         while network_id not in self.networks:
@@ -295,13 +298,19 @@ class DellMechanismDriver(api.MechanismDriver):
     def update_network_postcommit(self,context):
         network = context.current
         subnets = (context._plugin_context.session.query(models_v2.Subnet).filter_by(network_id=network['id']).all())
-        subnet = subnets[0]
+        try:
+            subnet = subnets[0]
+        except:
+            subnet = {'cidr':'0.0.0.0/24'}
         self.update_network(network,subnet)
            
     def post_non_vm_port(self, port):
         try:              
                 self.post_provider()               
-                ip = port['fixed_ips'][0]['ip_address']   
+                try:  
+                    ip = port['fixed_ips'][0]['ip_address']
+                except:
+                    ip = "0.0.0.0"   
                 if port['tenant_id'] != '': 
                     print port['tenant_id'] 
                     resource = PORT_URI % (port['mac_address'], port['tenant_id'], provider_id)               
@@ -355,7 +364,10 @@ class DellMechanismDriver(api.MechanismDriver):
                 self.post_non_vm_port(port)
                 return
             self.post_provider()
-            ip = port['fixed_ips'][0]['ip_address']  
+            try:
+                ip = port['fixed_ips'][0]['ip_address']
+            except:
+                ip = "0.0.0.0"  
             self.post_tenant(port['tenant_id']) 
             resource = PORT_URI % (port['mac_address'], port['tenant_id'], provider_id)            
             vm = self.nova.servers.get(port['device_id'])
