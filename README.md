@@ -29,5 +29,4 @@ Please take the following steps to enable Dell Mechanims Driver:
 5. locate the file neutron/neutron.egg-info/entry_points.txt, in the [neutron.ml2.mechanism_drivers] section, 
     add the line:dell = neutron.plugins.ml2.drivers.dell.mech_dell:DellMechanismDriver
    
-
-6. restart neutron service, add --config-file = /etc/neutron/plugins/ml2/ml2_conf_dell.ini to the command.
+6. restart neutron service, add --config-file /etc/neutron/plugins/ml2/ml2_conf_dell.ini to the command.
